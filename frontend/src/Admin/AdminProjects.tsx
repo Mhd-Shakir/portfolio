@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-// ✅ FIX: Changed path from '../../utils' to '../utils'
+// ✅ FIX: Correct path to utils folder
 import { getToken } from '../utils/localStorage';
-import { API_URL } from '../utils/config'; 
+import { API_URL } from '../utils/config';
 
 interface Project {
   _id: string;
@@ -42,14 +42,18 @@ export const AdminProjects: React.FC = () => {
     if (!window.confirm('Are you sure you want to delete this project?')) return;
     
     const token = getToken();
-    const res = await fetch(`${API_URL}/api/projects/${id}`, {
-      method: 'DELETE',
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    
-    if (res.ok) {
-      fetchProjects();
-      alert('Project Deleted');
+    try {
+      const res = await fetch(`${API_URL}/api/projects/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (res.ok) {
+        fetchProjects();
+        alert('Project Deleted');
+      }
+    } catch (error) {
+      alert('Failed to delete project');
     }
   };
 
@@ -61,6 +65,7 @@ export const AdminProjects: React.FC = () => {
     try {
       const token = getToken();
       const data = new FormData();
+      
       // Append all text fields
       Object.entries(formData).forEach(([key, value]) => {
         data.append(key, value);
@@ -93,6 +98,10 @@ export const AdminProjects: React.FC = () => {
           technologies: '', githubUrl: '', liveUrl: '', category: 'web'
         });
         setImageFile(null);
+        // Reset file input manually
+        const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+        if (fileInput) fileInput.value = '';
+        
         fetchProjects();
       } else {
         setMessage(`❌ Error: ${result.message}`);
@@ -159,29 +168,40 @@ export const AdminProjects: React.FC = () => {
                onChange={e => setImageFile(e.target.files ? e.target.files[0] : null)} />
           </div>
 
-          <button type="submit" disabled={loading} className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:bg-gray-400">
+          <button type="submit" disabled={loading} className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:bg-gray-400 transition-colors">
             {loading ? 'Uploading...' : 'Create Project'}
           </button>
 
-          {message && <p className="text-center mt-4 font-bold">{message}</p>}
+          {message && (
+            <p className={`text-center mt-4 font-bold ${message.includes('Error') ? 'text-red-500' : 'text-green-500'}`}>
+              {message}
+            </p>
+          )}
         </form>
       </div>
 
       {/* RIGHT: List Existing Projects */}
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md h-fit">
         <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">Existing Projects</h2>
-        <ul className="space-y-3">
-          {projects.map(project => (
-            <li key={project._id} className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded border dark:border-gray-600">
-              <div>
-                <p className="font-bold text-gray-800 dark:text-white">{project.title}</p>
-                <span className="text-xs px-2 py-1 bg-blue-100 text-blue-600 rounded-full">{project.category}</span>
-              </div>
-              <button onClick={() => handleDelete(project._id)} className="text-red-500 hover:text-red-700 font-semibold text-sm border border-red-500 px-3 py-1 rounded hover:bg-red-50">
-                Delete
-              </button>
-            </li>
-          ))}
+        <ul className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
+          {projects.length === 0 ? (
+            <p className="text-gray-500 dark:text-gray-400 text-center py-4">No projects found.</p>
+          ) : (
+            projects.map(project => (
+              <li key={project._id} className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded border dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                <div>
+                  <p className="font-bold text-gray-800 dark:text-white">{project.title}</p>
+                  <span className="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-full">{project.category}</span>
+                </div>
+                <button 
+                  onClick={() => handleDelete(project._id)} 
+                  className="text-red-500 hover:text-white border border-red-500 hover:bg-red-500 font-semibold text-xs px-3 py-1 rounded transition-all"
+                >
+                  Delete
+                </button>
+              </li>
+            ))
+          )}
         </ul>
       </div>
     </div>
