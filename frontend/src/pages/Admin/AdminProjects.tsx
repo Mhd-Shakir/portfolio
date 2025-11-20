@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 // ✅ FIX: Correct path to utils folder
-import { getToken } from '../utils/localStorage';
-import { API_URL } from '../utils/config';
+import { getToken } from '../../utils/authUtils';
+import { API_URL } from '../../utils/config';
 
 interface Project {
   _id: string;

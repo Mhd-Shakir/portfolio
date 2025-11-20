@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { getToken } from '../utils/localStorage';
+import { getToken } from '../../utils/authUtils';
 import { Trash2, Phone, Mail, AlertCircle } from 'lucide-react';
-import { API_URL } from '../utils/config'; 
+import { API_URL } from '../../utils/config'; 
 
 interface ContactMessage {
   _id: string;

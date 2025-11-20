@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, Outlet, NavLink } from 'react-router-dom';
-import { isAdmin, clearAuthData } from '../utils/localStorage';
+import { isAdmin, clearAuthData } from '../utils/authUtils';
 import { LayoutDashboard, FolderKanban, Contact, LogOut, UserCircle } from 'lucide-react';
 
 const AdminLayout: React.FC = () => {
