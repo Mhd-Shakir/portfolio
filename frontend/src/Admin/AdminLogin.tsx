@@ -1,23 +1,15 @@
-// frontend/src/pages/Admin/AdminLogin.tsx
-
 import React, { useState } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
-// 🔑 FIX: Corrected path from '..utils/localStorage' to '../../utils/localStorage'
-import { setAuthData, isAdmin } from '../utils/localStorage'; 
-
-// Define the full backend URL for guaranteed connectivity
-const BACKEND_URL = 'http://localhost:5000'; 
+import { setAuthData, isAdmin } from '../../utils/localStorage';
+import { API_URL } from '../../utils/config'; // ✅ Import config
 
 export const AdminLogin: React.FC = () => {
-  // State variables for email and password
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState(''); 
-  
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Redirect if already logged in as admin
   if (isAdmin()) {
     return <Navigate to="/admin/dashboard" replace />;
   }
@@ -28,8 +20,8 @@ export const AdminLogin: React.FC = () => {
     setError('');
 
     try {
-      // Use the full absolute URL for guaranteed connectivity
-      const response = await fetch(`${BACKEND_URL}/api/auth/login`, {
+      // ✅ Use API_URL variable
+      const response = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -59,7 +51,7 @@ export const AdminLogin: React.FC = () => {
             type="email"
             placeholder="Admin Email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)} 
+            onChange={(e) => setEmail(e.target.value)}
             className="w-full p-3 border border-gray-300 dark:border-gray-700 dark:bg-gray-700 rounded-md focus:ring-blue-500 focus:border-blue-500 text-gray-900 dark:text-white"
             required
           />
@@ -67,7 +59,7 @@ export const AdminLogin: React.FC = () => {
             type="password"
             placeholder="Password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)} 
+            onChange={(e) => setPassword(e.target.value)}
             className="w-full p-3 border border-gray-300 dark:border-gray-700 dark:bg-gray-700 rounded-md focus:ring-blue-500 focus:border-blue-500 text-gray-900 dark:text-white"
             required
           />

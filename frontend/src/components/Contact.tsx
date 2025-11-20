@@ -2,6 +2,7 @@ import { motion, useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { Mail, MapPin, Phone, Send, Github, Linkedin, Twitter, Loader2 } from 'lucide-react';
 import { fadeIn, staggerContainer } from '../utils/animations';
+import { API_URL } from '../utils/config'; // Ensure you import API_URL if you are using the config file
 
 const contactInfo = [
   { icon: Mail, label: 'Email', value: 'john.doe@example.com', href: 'mailto:john.doe@example.com' },
@@ -18,7 +19,8 @@ const socialLinks = [
 export const Contact = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.3 });
-  // ✅ CHANGED: Added phone to state
+  
+  // State now includes phone instead of subject
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', message: '' });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false); 
@@ -28,7 +30,8 @@ export const Contact = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('/api/contact', {
+      // Use the API_URL from your config
+      const response = await fetch(`${API_URL}/api/contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -40,7 +43,7 @@ export const Contact = () => {
 
       if (data.success) {
         setIsSubmitted(true);
-        // Reset form including phone
+        // Reset form
         setFormData({ name: '', email: '', phone: '', message: '' });
         
         setTimeout(() => {
@@ -173,7 +176,7 @@ export const Contact = () => {
                   </label>
                 </div>
 
-                {/* ✅ ADDED: Phone Input */}
+                {/* Phone Number Input */}
                 <div className="relative">
                   <input
                     type="tel"
