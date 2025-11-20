@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
-import { setAuthData, isAdmin } from '../../utils/localStorage';
-import { API_URL } from '../../utils/config'; // ✅ Import config
+import { setAuthData, isAdmin } from '../utils/localStorage';
+import { API_URL } from '../utils/config'; 
 
 export const AdminLogin: React.FC = () => {
   const [email, setEmail] = useState('');
