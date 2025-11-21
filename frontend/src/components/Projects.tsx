@@ -2,16 +2,17 @@ import { motion, useInView } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
 import { ExternalLink, Github, Loader2 } from 'lucide-react';
 import { fadeIn, staggerContainer } from '../utils/animations';
+// ✅ FIX 1: Import the API URL configuration
+import { API_URL } from '../utils/config';
 
-// Updated to match your MongoDB Model
 interface Project {
   _id: string;
   title: string;
   description: string;
   image: string;
-  technologies: string[]; // Changed from tags
-  githubUrl: string;      // Changed from github
-  liveUrl: string;        // Changed from demo
+  technologies: string[];
+  githubUrl: string;
+  liveUrl: string;
 }
 
 const ProjectCard = ({ project, index }: { project: Project; index: number }) => {
@@ -49,7 +50,6 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
           </p>
 
           <div className="flex flex-wrap gap-2 mb-4">
-            {/* Updated to use 'technologies' */}
             {project.technologies.map((tech, tagIndex) => (
               <motion.span
                 key={tech}
@@ -67,7 +67,7 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
             <motion.a
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              href={project.githubUrl} // Updated
+              href={project.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-lg font-medium hover:shadow-lg transition-shadow duration-300"
@@ -78,7 +78,7 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
             <motion.a
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              href={project.liveUrl} // Updated
+              href={project.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium hover:shadow-lg transition-shadow duration-300 relative overflow-hidden group/btn"
@@ -110,7 +110,8 @@ export const Projects = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await fetch('/api/projects');
+        // ✅ FIX 2: Use API_URL here to connect to Render Backend
+        const response = await fetch(`${API_URL}/api/projects`);
         const data = await response.json();
         
         if (data.success) {
