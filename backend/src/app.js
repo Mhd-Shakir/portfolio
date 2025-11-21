@@ -12,20 +12,13 @@ const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 
-// Define allowed frontend origins for CORS
-const allowedOrigins = [
-  process.env.CLIENT_URL || 'http://localhost:3000',
-  'http://localhost:5173', // Common Vite default
-  'http://localhost:5174', // Your current port causing the error
-  // Add other local ports you might use for testing if necessary
-];
-
 // Security middleware
 app.use(helmet());
 
-// ✅ FIXED CORS: Use the array of allowed origins
+// ✅ NUCLEAR CORS FIX: Allow ANY origin
+// This automatically reflects the request origin, allowing Vercel to connect easily.
 app.use(cors({ 
-  origin: allowedOrigins, // Use the array to allow multiple ports
+  origin: true, 
   credentials: true 
 }));
 
